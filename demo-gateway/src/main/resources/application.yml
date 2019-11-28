@@ -1,0 +1,36 @@
+server:
+  port: 8081
+
+spring:
+  application:
+     name: 'GATEWAY-SERVER'
+  cloud:
+    gateway:
+      routes:
+        - id: 'DEMO-PRODUCT'
+          uri: lb://DEMO-PRODUCT
+          predicates:
+            - Path=/product/**
+          filters:
+            #转发请求时去掉1级前缀
+            - StripPrefix=1
+        - id: 'DEMO-USER'
+          uri: lb://DEMO-USER
+          predicates:
+            - Path=/user/**
+          filters:
+            #转发请求时去掉1级前缀
+            - StripPrefix=1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: 'http://192.168.2.5:8080/eureka/'
+
+management:
+  server:
+    port: 8091
+  endpoints:
+    web:
+      exposure:
+        include: '*'
